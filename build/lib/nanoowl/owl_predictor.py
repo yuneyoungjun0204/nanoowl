@@ -183,19 +183,8 @@ class OwlPredictor(torch.nn.Module):
     
     def encode_text(self, text: List[str]) -> OwlEncodeTextOutput:
         text_input = self.processor(text=text, return_tensors="pt")
-
-        # Handle both numpy arrays and PyTorch tensors
-        input_ids = text_input['input_ids']
-        attention_mask = text_input['attention_mask']
-
-        if isinstance(input_ids, np.ndarray):
-            input_ids = torch.from_numpy(input_ids)
-        if isinstance(attention_mask, np.ndarray):
-            attention_mask = torch.from_numpy(attention_mask)
-
-        input_ids = input_ids.to(self.device)
-        attention_mask = attention_mask.to(self.device)
-
+        input_ids = text_input['input_ids'].to(self.device)
+        attention_mask = text_input['attention_mask'].to(self.device)
         text_outputs = self.model.owlvit.text_model(input_ids, attention_mask)
         text_embeds = text_outputs[1]
         text_embeds = self.model.owlvit.text_projection(text_embeds)
