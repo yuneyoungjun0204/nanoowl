@@ -182,7 +182,7 @@ class OwlPredictor(torch.nn.Module):
         return (self.image_size, self.image_size)
     
     def encode_text(self, text: List[str]) -> OwlEncodeTextOutput:
-        text_input = self.processor(text=text, return_tensors="pt")
+        text_input = self.processor(text=text, padding=True, return_tensors="pt")
 
         # Handle both numpy arrays and PyTorch tensors
         input_ids = text_input['input_ids']
